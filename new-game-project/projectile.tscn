@@ -10,7 +10,7 @@ size = Vector2(4, 8)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2xblw"]
 shader = ExtResource("1_qxf0c")
 shader_parameter/line_colour = Color(0.07450981, 0.07058824, 0.11372549, 1)
-shader_parameter/line_thickness = 8
+shader_parameter/line_thickness = 4
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dgwo2"]
 atlas = ExtResource("2_dgwo2")
@@ -18,7 +18,7 @@ region = Rect2(24, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sxmqc"]
 atlas = ExtResource("2_dgwo2")
-region = Rect2(24, 48, 8, 8)
+region = Rect2(24, 56, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2xblw"]
 animations = [{

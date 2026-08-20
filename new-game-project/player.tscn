@@ -10,7 +10,7 @@ size = Vector2(4, 7)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hqtel"]
 shader = ExtResource("2_i3pqv")
 shader_parameter/line_colour = Color(0.07450981, 0.07058824, 0.11372549, 1)
-shader_parameter/line_thickness = 8
+shader_parameter/line_thickness = 4
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
 atlas = ExtResource("2_onrkg")
@@ -180,11 +180,16 @@ position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_i3pqv")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1016205144]
-zoom = Vector2(8, 8)
+zoom = Vector2(4, 4)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=97513800]
 material = SubResource("ShaderMaterial_hqtel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=678019596]
 sprite_frames = SubResource("SpriteFrames_sweqy")
-animation = &"attack_up"
+animation = &"attack_down"
+
+[node name="AtkTimer" type="Timer" parent="." unique_id=968529831]
+wait_time = 0.2
+
+[connection signal="timeout" from="AtkTimer" to="." method="_on_atk_timer_timeout"]

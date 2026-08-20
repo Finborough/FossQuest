@@ -77,6 +77,9 @@ func generate_chunk(pos: Vector2i):
 
 			if alt < sea_level: 
 				set_cell(cell_pos, 0, Vector2i(6, 0))
+			elif alt > 4 and moist < 1:
+				print(alt)
+				set_cell(cell_pos, 0, Vector2i(5, 0))
 			else:
 				var atlas_pos := Vector2i(
 					int(round(2 * abs(moist * 10) / 20)),
@@ -88,6 +91,13 @@ func generate_chunk(pos: Vector2i):
 	
 	if not player.found_spawn_tile:
 		player.check_if_stuck()
+		print("Stuck!")
+
+
+
+
+
+
 
 func unload_distant_chunks(player_chunk_pos: Vector2i):
 	var unload_distance_threshold = (width * 3)
@@ -117,4 +127,4 @@ func destroy_tile(pos):
 	set_cell(pos, 0, Vector2(1,2))
 
 func build_tile(pos):
-	set_cell(pos, 0, Vector2(1,4))
+	set_cell(local_to_map(pos), 0, Vector2(0,4))

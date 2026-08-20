@@ -7,13 +7,24 @@ extends CharacterBody2D
 var speed = 100
 var direction = Vector2(1,0)
 
+var first_pos = Vector2()
+var range = 16
+
 func _ready() -> void:
+	first_pos = position
 	direction = player.atk_direction
 	look_at(position + direction)
 
 func _physics_process(delta: float) -> void:
 	velocity = direction * speed
 	move_and_slide()
+	
+	print(abs(first_pos - position) * direction)
+	if position.distance_to(first_pos) > range:
+		sprite.frame = 1
+		speed = 0
+		await get_tree().create_timer(0.2).timeout
+		queue_free()
 
 
 
@@ -37,7 +48,7 @@ func _on_area_2d_body_shape_entered(body_rid: RID, body: Node2D, body_shape_inde
 			if tile_data and tile_data.get_collision_polygons_count(0) > 0:
 				print("Successfully locked onto tile at: ", map_pos)
 				tilemap.destroy_tile(map_pos)
-
+				
 				queue_free()
 				
 				
