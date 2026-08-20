@@ -19,7 +19,7 @@ func _physics_process(delta: float) -> void:
 	velocity = direction * speed
 	move_and_slide()
 	
-	print(abs(first_pos - position) * direction)
+	#print(abs(first_pos - position) * direction)
 	if position.distance_to(first_pos) > range:
 		sprite.frame = 1
 		speed = 0

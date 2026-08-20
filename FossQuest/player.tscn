@@ -181,13 +181,14 @@ shape = SubResource("RectangleShape2D_i3pqv")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1016205144]
 zoom = Vector2(4, 4)
+limit_enabled = false
 
 [node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=97513800]
 material = SubResource("ShaderMaterial_hqtel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=678019596]
 sprite_frames = SubResource("SpriteFrames_sweqy")
-animation = &"attack_down"
+animation = &"walk_left"
 
 [node name="AtkTimer" type="Timer" parent="." unique_id=968529831]
 wait_time = 0.2

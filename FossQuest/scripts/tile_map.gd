@@ -4,8 +4,9 @@ var moisture = FastNoiseLite.new()
 var temperature = FastNoiseLite.new()
 var altitude = FastNoiseLite.new()
 
-var width = 32
-var height = 32
+var chunk_width = 32
+var chunk_height = 32
+var size = 1
 
 var sea_level = 0
 var noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
@@ -37,18 +38,17 @@ var render_distance: int = 1
 
 func update_chunks():
 	var player_tile_pos = local_to_map(player.position)
-	
-	# Get player's current chunk center
-	var current_chunk_x = int(floor(float(player_tile_pos.x) / width)) * width + (width / 2)
-	var current_chunk_y = int(floor(float(player_tile_pos.y) / height)) * height + (height / 2)
+
+	var current_chunk_x = int(floor(float(player_tile_pos.x) / chunk_width)) * chunk_width + (chunk_width / 2)
+	var current_chunk_y = int(floor(float(player_tile_pos.y) / chunk_height)) * chunk_height + (chunk_height / 2)
 	var center_chunk_pos = Vector2i(current_chunk_x, current_chunk_y)
 
 	# Generate all chunks within the render distance grid
 	for x in range(-render_distance, render_distance + 1):
 		for y in range(-render_distance, render_distance + 1):
 			var chunk_pos = Vector2i(
-				center_chunk_pos.x + (x * width),
-				center_chunk_pos.y + (y * height)
+				center_chunk_pos.x + (x * chunk_width),
+				center_chunk_pos.y + (y * chunk_height)
 			)
 			
 			if chunk_pos not in loaded_chunks:
@@ -58,9 +58,9 @@ func update_chunks():
 	unload_distant_chunks(center_chunk_pos)
 
 func generate_chunk(pos: Vector2i):
-	for x in range(width):
-		for y in range(height):
-			var cell_pos := Vector2i(pos.x - (width / 2) + x, pos.y - (height / 2) + y)
+	for x in range(chunk_width):
+		for y in range(chunk_height):
+			var cell_pos := Vector2i(pos.x - (chunk_width / 2) + x, pos.y - (chunk_height / 2) + y)
 			
 			# Preserve modified tiles
 			if cell_pos in modified_tiles:
@@ -89,9 +89,9 @@ func generate_chunk(pos: Vector2i):
 
 	loaded_chunks.append(pos)
 	
-	if not player.found_spawn_tile:
-		player.check_if_stuck()
-		print("Stuck!")
+	#if not player.found_spawn_tile:
+		#player.check_if_stuck()
+		#print("Stuck!")
 
 
 
@@ -100,7 +100,7 @@ func generate_chunk(pos: Vector2i):
 
 
 func unload_distant_chunks(player_chunk_pos: Vector2i):
-	var unload_distance_threshold = (width * 3)
+	var unload_distance_threshold = (chunk_width * 3)
 
 	for i in range(loaded_chunks.size() - 1, -1, -1):
 		var chunk = loaded_chunks[i]
@@ -111,10 +111,9 @@ func unload_distant_chunks(player_chunk_pos: Vector2i):
 			loaded_chunks.remove_at(i)
 
 func clear_chunk(pos: Vector2i):
-	for x in range(width):
-		for y in range(height):
-			var cell_pos := Vector2i(pos.x - (width / 2) + x, pos.y - (height / 2) + y)
-			# Do not erase cell if player modified it, or erase standard cells
+	for x in range(chunk_width):
+		for y in range(chunk_height):
+			var cell_pos := Vector2i(pos.x - (chunk_width / 2) + x, pos.y - (chunk_height / 2) + y)
 			set_cell(cell_pos, -1)
 
 func _on_timer_timeout() -> void:

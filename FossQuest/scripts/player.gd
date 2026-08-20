@@ -25,9 +25,9 @@ func check_if_stuck() -> bool:
 			global_position.x += 8
 			force_update_transform() 
 	await get_tree().create_timer(0.1).timeout
-	if is_standing_on_tile() and test_move(global_transform, Vector2.ZERO) == false:
-		#found_spawn_tile = true
-		print("Spawn tile found!")
+	#if is_standing_on_tile() and test_move(global_transform, Vector2.ZERO) == false:
+		##found_spawn_tile = true
+		#print("Spawn tile found!")
 
 	return true
 
