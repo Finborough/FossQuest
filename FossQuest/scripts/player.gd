@@ -1,10 +1,13 @@
 extends CharacterBody2D
 
+# Stats and Inventory
+var hp = 3
+
 # Movement
 @export var speed: float = 200.0
 var anim_direction: String = "down"
 var atk_direction : Vector2
-var can_atk = true
+var can_atk : bool = true
 
 # Scenes and Nodes
 @onready var animated_sprite: AnimatedSprite2D = $CanvasGroup/AnimatedSprite2D
@@ -15,15 +18,18 @@ var can_atk = true
 
 var found_spawn_tile : bool = false
 
+var knockback : Vector2 = Vector2.ZERO
+var knockback_timer : float = 0.0
 
 func check_if_stuck() -> bool:
 	# Keep picking random positions until we find an empty spot
 	if test_move(global_transform, Vector2.ZERO):
 		print("Spawn area is obstructed! Moving...")
 		# Forces PhysicsServer2D to sync immediately before testing again
-		while test_move(global_transform, Vector2.ZERO):
-			global_position.x += 8
-			force_update_transform() 
+	while test_move(global_transform, Vector2.ZERO):
+		global_position.x += 1
+		force_update_transform() 
+		#print("obstructed")
 	await get_tree().create_timer(0.1).timeout
 	#if is_standing_on_tile() and test_move(global_transform, Vector2.ZERO) == false:
 		##found_spawn_tile = true
@@ -31,8 +37,26 @@ func check_if_stuck() -> bool:
 
 	return true
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
+	if hp <= 0:
+		get_tree().reload_current_scene()
 
+func _physics_process(delta: float) -> void:
+	if knockback_timer > 0.0:
+		velocity = knockback
+		knockback_timer -= delta
+		if knockback_timer <= 0.0:
+			knockback = Vector2.ZERO
+	else:
+		movement(delta)
+	
+	move_and_slide()
+
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		tilemap.build_tile(position + atk_direction * 8)
+
+func movement(delta):
 	var direction : Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	
 	if direction != Vector2.ZERO and not Input.is_action_pressed("ui_accept"):
@@ -56,21 +80,6 @@ func _physics_process(delta: float) -> void:
 		animated_sprite.frame = 1
 	if Input.is_action_just_released("ui_accept"):
 		animated_sprite.frame = 1
-		
-	move_and_slide()
-
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("ui_cancel"):
-		tilemap.build_tile(position + atk_direction * 8)
-
-func is_standing_on_tile() -> bool:
-	
-	# Convert player's position to tilemap grid coordinates
-	var local_pos = tilemap.to_local(global_position)
-	var cell_coords = tilemap.local_to_map(local_pos)
-	
-	# Returns -1 if the cell is empty/has no tile on layer 0
-	return tilemap.get_cell_source_id(cell_coords) != -1
 
 func update_animation_direction(dir: Vector2) -> void:
 	if abs(dir.x) > abs(dir.y):
@@ -78,6 +87,27 @@ func update_animation_direction(dir: Vector2) -> void:
 	else:
 		anim_direction = "down" if dir.y > 0 else "up"
 
+func apply_knockback(dir: Vector2, force: float, knockback_duration: float) -> void:
+	knockback = dir * force
+	knockback_timer = knockback_duration
 
 func _on_atk_timer_timeout() -> void:
 	can_atk = true
+
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	
+	if not body.is_in_group("enemy"):
+		return
+	body.atk_timer.start()
+	
+
+
+func _on_hurt_box_body_exited(body: Node2D) -> void:
+	if not body.is_in_group("enemy"):
+		return
+	body.atk_timer.stop()
+
+
+func _on_stun_timer_timeout() -> void:
+	animated_sprite.play("walk_right")

@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://d2dmaogsk42pe"]
+
+[ext_resource type="Texture2D" uid="uid://b00ulq3d4mh0p" path="res://adventure.png" id="1_baghe"]
+[ext_resource type="Script" uid="uid://cfre6lsyo84fi" path="res://scripts/snake.gd" id="1_gxkgb"]
+[ext_resource type="Shader" uid="uid://bp50n52e6jlcy" path="res://stroke.gdshader" id="2_2x2sd"]
+[ext_resource type="AudioStream" uid="uid://dmvblbif2jl48" path="res://explosion.wav" id="4_olj5u"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_baghe"]
+radius = 3.7583241
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_olj5u"]
+shader = ExtResource("2_2x2sd")
+shader_parameter/line_colour = Color(0.07450981, 0.07058824, 0.11372549, 1)
+shader_parameter/line_thickness = 4
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sn80k"]
+atlas = ExtResource("1_baghe")
+region = Rect2(0, 64, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gxkgb"]
+atlas = ExtResource("1_baghe")
+region = Rect2(64, 64, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2x2sd"]
+atlas = ExtResource("1_baghe")
+region = Rect2(72, 64, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_olj5u"]
+atlas = ExtResource("1_baghe")
+region = Rect2(64, 48, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dw1s1"]
+atlas = ExtResource("1_baghe")
+region = Rect2(72, 48, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ej4wj"]
+atlas = ExtResource("1_baghe")
+region = Rect2(64, 40, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xox5r"]
+atlas = ExtResource("1_baghe")
+region = Rect2(72, 40, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vl5xi"]
+atlas = ExtResource("1_baghe")
+region = Rect2(64, 56, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jmbwr"]
+atlas = ExtResource("1_baghe")
+region = Rect2(72, 56, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sn80k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sn80k")
+}],
+"loop": true,
+"name": &"damage",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gxkgb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2x2sd")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_olj5u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dw1s1")
+}],
+"loop": true,
+"name": &"walk_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ej4wj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xox5r")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vl5xi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jmbwr")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[node name="Snake" type="CharacterBody2D" unique_id=1143333540 groups=["enemy"]]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_gxkgb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=754024541]
+position = Vector2(0.25, 0.75)
+shape = SubResource("CircleShape2D_baghe")
+
+[node name="StunTimer" type="Timer" parent="." unique_id=695873609]
+wait_time = 0.2
+one_shot = true
+
+[node name="AtkTimer" type="Timer" parent="." unique_id=1648721396]
+wait_time = 0.3
+
+[node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=2006709833]
+material = SubResource("ShaderMaterial_olj5u")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=342302445]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_sn80k")
+animation = &"walk_up"
+
+[node name="Navigation" type="Node2D" parent="." unique_id=616538431]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Navigation" unique_id=903618232]
+path_desired_distance = 167.19
+avoidance_enabled = true
+
+[node name="NavTimer" type="Timer" parent="Navigation" unique_id=777640744]
+autostart = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1520270784]
+stream = ExtResource("4_olj5u")
+
+[connection signal="timeout" from="StunTimer" to="." method="_on_stun_timer_timeout"]
+[connection signal="timeout" from="AtkTimer" to="." method="_on_atk_timer_timeout"]
+[connection signal="timeout" from="Navigation/NavTimer" to="." method="_on_nav_timer_timeout"]

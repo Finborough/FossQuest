@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cyah1urdvyrrt" path="res://scripts/projectile.gd" id="1_dgwo2"]
 [ext_resource type="Shader" uid="uid://bp50n52e6jlcy" path="res://stroke.gdshader" id="1_qxf0c"]
 [ext_resource type="Texture2D" uid="uid://b00ulq3d4mh0p" path="res://adventure.png" id="2_dgwo2"]
+[ext_resource type="AudioStream" uid="uid://7tu4ehyyqr6c" path="res://click.wav" id="4_sxmqc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sxmqc"]
 size = Vector2(4, 8)
@@ -14,11 +15,11 @@ shader_parameter/line_thickness = 4
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dgwo2"]
 atlas = ExtResource("2_dgwo2")
-region = Rect2(24, 40, 8, 8)
+region = Rect2(0, 48, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sxmqc"]
 atlas = ExtResource("2_dgwo2")
-region = Rect2(24, 56, 8, 8)
+region = Rect2(8, 64, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2xblw"]
 animations = [{
@@ -54,10 +55,18 @@ material = SubResource("ShaderMaterial_2xblw")
 sprite_frames = SubResource("SpriteFrames_2xblw")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=163623848]
+collision_layer = 5
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1827025178]
 position = Vector2(-4, 0)
 rotation = -1.5707964
 shape = SubResource("SegmentShape2D_dgwo2")
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer" parent="." unique_id=1978600184]
+stream = ExtResource("4_sxmqc")
+pitch_scale = 0.35
+autoplay = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_shape_entered" from="Area2D" to="." method="_on_area_2d_body_shape_entered"]

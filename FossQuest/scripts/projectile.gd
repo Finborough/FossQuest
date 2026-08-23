@@ -3,7 +3,9 @@ extends CharacterBody2D
 @onready var player = get_tree().current_scene.get_node("Player")
 @onready var tilemap = get_tree().current_scene.get_node("GroundTiles")
 @onready var sprite = $CanvasGroup/Sprite2D
+@onready var world = get_parent()
 
+var damage = 1
 var speed = 100
 var direction = Vector2(1,0)
 
@@ -46,7 +48,6 @@ func _on_area_2d_body_shape_entered(body_rid: RID, body: Node2D, body_shape_inde
 			# 4. Check if the tile actually contains physics data (double verification)
 			var tile_data: TileData = tilemap.get_cell_tile_data(map_pos)
 			if tile_data and tile_data.get_collision_polygons_count(0) > 0:
-				print("Successfully locked onto tile at: ", map_pos)
 				tilemap.destroy_tile(map_pos)
 				
 				queue_free()
@@ -55,3 +56,15 @@ func _on_area_2d_body_shape_entered(body_rid: RID, body: Node2D, body_shape_inde
 				# Commit to chunk system and erase
 				#ChunkManager.erased_tiles[map_pos] = true 
 				
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if not body.is_in_group("enemy"):
+		return
+	queue_free()
+	world.get_node("AudioStreamPlayer").play()
+	body.animated_sprite.play("damage")
+	var knockback_direction = direction #(global_position - body.global_position).normalized()
+	body.apply_knockback(knockback_direction, 50.0, 0.2)
+	body.hp -= damage
+	body.get_node("StunTimer").start()
