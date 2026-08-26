@@ -195,8 +195,12 @@ position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_i3pqv")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1016205144]
+offset = Vector2(32, 0)
 zoom = Vector2(4, 4)
-limit_enabled = false
+limit_left = -800
+limit_top = -776
+limit_right = 1000
+limit_bottom = 968
 
 [node name="StunTimer" type="Timer" parent="." unique_id=1690808861]
 wait_time = 0.2
@@ -207,6 +211,7 @@ material = SubResource("ShaderMaterial_hqtel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=678019596]
 sprite_frames = SubResource("SpriteFrames_sweqy")
+animation = &"attack_down"
 
 [node name="AtkTimer" type="Timer" parent="." unique_id=968529831]
 wait_time = 0.2

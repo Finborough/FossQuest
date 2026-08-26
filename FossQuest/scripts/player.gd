@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 # Stats and Inventory
 var hp = 3
+var food = 0
+var gold = 0
+var rubies = 0
 
 # Movement
 @export var speed: float = 200.0
@@ -16,26 +19,22 @@ var can_atk : bool = true
 @onready var tilemap = get_parent().get_node("GroundTiles")
 @onready var projectile = preload("res://projectile.tscn")
 
+var inventory : Dictionary = {
+	
+}
+
 var found_spawn_tile : bool = false
 
 var knockback : Vector2 = Vector2.ZERO
 var knockback_timer : float = 0.0
 
 func check_if_stuck() -> bool:
-	# Keep picking random positions until we find an empty spot
 	if test_move(global_transform, Vector2.ZERO):
 		print("Spawn area is obstructed! Moving...")
-		# Forces PhysicsServer2D to sync immediately before testing again
-	while test_move(global_transform, Vector2.ZERO):
-		global_position.x += 1
-		force_update_transform() 
-		#print("obstructed")
-	await get_tree().create_timer(0.1).timeout
-	#if is_standing_on_tile() and test_move(global_transform, Vector2.ZERO) == false:
-		##found_spawn_tile = true
-		#print("Spawn tile found!")
+		position.y += randf_range(-50, 50)
+		position.x += randf_range(-50, 50)
 
-	return true
+	return false
 
 func _process(delta: float) -> void:
 	if hp <= 0:
@@ -54,7 +53,7 @@ func _physics_process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
-		tilemap.build_tile(position + atk_direction * 8)
+		tilemap.build_tile(position + atk_direction * 8, Vector2(0,4))
 
 func movement(delta):
 	var direction : Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")

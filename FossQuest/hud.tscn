@@ -1,7 +1,30 @@
 [gd_scene format=3 uid="uid://dvewtmm6d837k"]
 
-[ext_resource type="FontFile" uid="uid://bdljcjudakul4" path="res://Pixeled.ttf" id="1_37p78"]
 [ext_resource type="Script" uid="uid://bqwsaty6uq8jo" path="res://scripts/hud.gd" id="1_64ctp"]
+[ext_resource type="FontFile" uid="uid://dlro6bs3nhyup" path="res://DePixelKlein.ttf" id="2_64ctp"]
+[ext_resource type="Script" uid="uid://d0rj5r6aw7qj2" path="res://scripts/texture_rect.gd" id="3_8sq4i"]
+[ext_resource type="Texture2D" uid="uid://b00ulq3d4mh0p" path="res://adventure.png" id="4_640wx"]
+
+[sub_resource type="Theme" id="Theme_64ctp"]
+default_font = ExtResource("2_64ctp")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_640wx"]
+atlas = ExtResource("4_640wx")
+region = Rect2(50, 42, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a2258"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_640wx")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="HUD" type="Control" unique_id=2007827647]
 layout_mode = 3
@@ -14,10 +37,139 @@ grow_vertical = 2
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1627388458]
 script = ExtResource("1_64ctp")
 
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=948330643]
-offset_left = 8.0
-offset_top = -8.0
-offset_right = 136.0
-offset_bottom = 38.0
-theme_override_fonts/font = ExtResource("1_37p78")
-text = "HEARTS: 3"
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1853218892]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 32.0
+grow_horizontal = 2
+theme = SubResource("Theme_64ctp")
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="CanvasLayer" unique_id=1362612748]
+z_index = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+rotation = 3.1415927
+scale = Vector2(-1, 1)
+theme = SubResource("Theme_64ctp")
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="CanvasLayer" unique_id=541976436]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 32.0
+grow_vertical = 2
+theme = SubResource("Theme_64ctp")
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer" unique_id=1008402683]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 320.80347
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(-1, 1)
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=789136990]
+offset_left = 854.0
+offset_top = 32.0
+offset_right = 1537.0
+offset_bottom = 300.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=948330643]
+texture_filter = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 128
+text = "Hearts: 3"
+
+[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=1859475276]
+texture_filter = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 128
+text = "Food: 3"
+
+[node name="Logs" type="RichTextLabel" parent="CanvasLayer" unique_id=890889309]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -312.0
+offset_top = -303.0
+offset_right = -10.0
+offset_bottom = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Logs"
+scroll_active = false
+scroll_following = true
+autowrap_mode = 1
+vertical_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1663909656]
+self_modulate = Color(0, 0, 0, 1)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -313.0
+offset_top = 315.5
+offset_bottom = -315.5
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/PanelContainer" unique_id=1539468245]
+layout_mode = 2
+text = "Ruby: 000000000"
+
+[node name="Label2" type="Label" parent="CanvasLayer/PanelContainer" unique_id=116015246]
+layout_mode = 2
+text = "Gold: 000000000"
+horizontal_alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1204908655]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 31.999968
+offset_right = -846.7123
+offset_bottom = -405.04114
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.92, 2.92)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/MarginContainer" unique_id=103658999]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/MarginContainer/SubViewportContainer" unique_id=1625825410]
+handle_input_locally = false
+size = Vector2i(274, 220)
+render_target_update_mode = 4
+
+[node name="Map" type="TextureRect" parent="CanvasLayer/MarginContainer/SubViewportContainer/SubViewport" unique_id=666840502]
+texture_filter = 1
+offset_left = 32.0
+offset_top = -0.16418362
+offset_right = 104.0
+offset_bottom = 71.835815
+script = ExtResource("3_8sq4i")
+world_size = Vector2i(96, 96)
+world_origin = Vector2i(96, 96)
+
+[node name="PlayerIcon" type="AnimatedSprite2D" parent="CanvasLayer/MarginContainer/SubViewportContainer/SubViewport/Map" unique_id=1498691376]
+z_index = 12
+position = Vector2(26, 26)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_a2258")
+frame_progress = 0.44882992

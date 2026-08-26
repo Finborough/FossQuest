@@ -64,6 +64,7 @@ func _on_stun_timer_timeout() -> void:
 	speed = BASE_SPEED
 	if hp <= 0:
 		die()
+		
 
 func apply_knockback(dir: Vector2, force: float, knockback_duration: float) -> void:
 	knockback = dir * force
@@ -71,6 +72,10 @@ func apply_knockback(dir: Vector2, force: float, knockback_duration: float) -> v
 
 
 func die():
+	randomize()
+	var loot = randi_range(1,3)
+	player.gold += loot
+	Global.logPrint("Looted " + str(loot) + " gold.")
 	queue_free()
 
 

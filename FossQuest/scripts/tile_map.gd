@@ -6,28 +6,39 @@ var moisture = FastNoiseLite.new()
 var temperature = FastNoiseLite.new()
 var altitude = FastNoiseLite.new()
 
-var chunk_width = 24
-var chunk_height = 24
-var size = 1
+# World size
+@export var world_chunk_radius: int = 8
+# Chunk size
+var chunk_width = 12
+var chunk_height = 12
 
+var world_min := Vector2i(
+	-world_chunk_radius * chunk_width,
+	-world_chunk_radius * chunk_height
+)
+
+# Modify how high the sea level is (how much water)
 var sea_level = 0
-var noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+
+var noise_type = FastNoiseLite
 
 var loaded_chunks = []
 
-# Tracks custom player/script changes so noise generation won't overwrite them
+# Tracks built and destroyed tiles so the world gen doesn't overwrite them
 var modified_tiles: Dictionary = {}
 
 var last_chunk_pos: Vector2i
-var initialized := false
+var initialized = false
 
 @onready var player = get_tree().current_scene.get_node("Player")
 @onready var snake = preload("res://snake.tscn")
 
 func _ready() -> void:
+	Global.logPrint("Destroy Lord Finborough!")
+
 	moisture.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	temperature.noise_type = FastNoiseLite.TYPE_VALUE
-	altitude.noise_type = noise_type
+	temperature.noise_type = FastNoiseLite.TYPE_PERLIN
+	altitude.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	
 	moisture.seed = randi()
 	temperature.seed = randi()
@@ -36,33 +47,49 @@ func _ready() -> void:
 	altitude.frequency = 0.008
 	
 	update_chunks(player.position)
+	print(world_min)
 
-# Call this function whenever you want to change a tile via script!
 func set_custom_tile(world_pos: Vector2i, source_id: int, atlas_coords: Vector2i):
 	modified_tiles[world_pos] = {"source_id": source_id, "atlas": atlas_coords}
 	set_cell(world_pos, source_id, atlas_coords)
 
-var render_distance: int = 1 
+var render_distance: int = 1
 
 func update_chunks(center_chunk_pos: Vector2i):
+	
 	print("Chunks updated")
 
 	for x in range(-render_distance, render_distance + 1):
 		for y in range(-render_distance, render_distance + 1):
-			var chunk_pos = Vector2i(
+
+			# Position of this chunk in world/tile coordinates
+			var chunk_pos := Vector2i(
 				center_chunk_pos.x + (x * chunk_width),
 				center_chunk_pos.y + (y * chunk_height)
 			)
 
+			# Convert world position to chunk coordinates
+			var chunk_coord := Vector2i(
+				floori(float(chunk_pos.x) / chunk_width),
+				floori(float(chunk_pos.y) / chunk_height)
+			)
+
+			# Don't generate outside the world boundary
+			if abs(chunk_coord.x) > world_chunk_radius:
+				continue
+
+			if abs(chunk_coord.y) > world_chunk_radius:
+				continue
+
+
 			if chunk_pos not in loaded_chunks:
 				generate_chunk(chunk_pos)
+	world.get_node("HUD/CanvasLayer/MarginContainer/SubViewportContainer/SubViewport/Map").generate_minimap()
 
-
-	unload_distant_chunks(center_chunk_pos)
-
-	unload_distant_chunks(center_chunk_pos)
+	
 
 func generate_chunk(pos: Vector2i):
+	
 	for x in range(chunk_width):
 		for y in range(chunk_height):
 			var cell_pos := Vector2i(pos.x - (chunk_width / 2) + x, pos.y - (chunk_height / 2) + y)
@@ -79,11 +106,16 @@ func generate_chunk(pos: Vector2i):
 			
 			moist = clamp(abs(moist), 0, 4)
 			temp = clamp(abs(temp), 0, 3)
-
+			
+			# Generate ocean
 			if alt < sea_level: 
 				set_cell(cell_pos, 0, Vector2i(6, 0))
-			elif alt > 4 and moist < 1:
+
+			# Generate mountains
+			elif alt > 3.5 and moist < 1:
 				set_cell(cell_pos, 0, Vector2i(5, 0))
+
+			# Generate everything else
 			else:
 				var atlas_pos := Vector2i(
 					int(round(2 * abs(moist * 10) / 20)),
@@ -93,21 +125,27 @@ func generate_chunk(pos: Vector2i):
 				var tile_data = get_cell_tile_data(cell_pos)
 				var spawned : bool = false
 				
-				if tile_data != null and tile_data.get_custom_data("snake_green") == true and randi_range(1,75) == 1:
+				if tile_data != null and tile_data.get_custom_data("snake_green") == true and randi_range(1,100) == 1:
 					var snake_instance = snake.instantiate()
 					snake_instance.global_position = to_global(map_to_local(cell_pos))
 					get_tree().current_scene.add_child.call_deferred(snake_instance)
+			var tile_data = get_cell_tile_data(cell_pos)
+
+			if tile_data:
+				var color = tile_data.get_custom_data("minimap_color")
+				WorldData.set_tile_minimap_color(cell_pos, color)
+
+
 
 
 	loaded_chunks.append(pos)
-	
-	#if not player.found_spawn_tile:
-	player.check_if_stuck()
-		#print("Stuck!")
+
+
 
 
 
 func _process(_delta):
+
 	var player_tile_pos = local_to_map(player.position)
 
 	var current_chunk_x = int(floor(float(player_tile_pos.x) / chunk_width)) * chunk_width + (chunk_width / 2)
@@ -119,6 +157,8 @@ func _process(_delta):
 		initialized = true
 		update_chunks(current_chunk_pos)
 
+	while player.check_if_stuck():
+		pass
 
 
 func unload_distant_chunks(player_chunk_pos: Vector2i):
@@ -138,16 +178,40 @@ func clear_chunk(pos: Vector2i):
 			var cell_pos := Vector2i(pos.x - (chunk_width / 2) + x, pos.y - (chunk_height / 2) + y)
 			set_cell(cell_pos, -1)
 
-func _on_timer_timeout() -> void:
-	#player.check_if_stuck()
-	pass
 
-func destroy_tile(pos):
+
+func damage_tile(map_pos):
+	var original_tile = get_cell_atlas_coords(map_pos)
+	set_cell(map_pos, 0, Vector2(0,8))
+	await get_tree().create_timer(0.2).timeout
+	set_cell(map_pos, 0, original_tile)
+
+func destroy_tile(pos, treasure : bool):
+	var tile_data: TileData = get_cell_tile_data(pos)
 	world.get_node("AudioStreamPlayer").play()
 	set_cell(pos, 0, Vector2(0,8))
 	await get_tree().create_timer(0.2).timeout
-	set_cell(pos, 0, Vector2(1,2))
+	
+	if treasure:
+		check_treasure(tile_data, pos)
+		return
+	set_cell(pos, 0, Vector2(1,1))
+
+func check_treasure(tile_data : TileData, map_pos : Vector2) -> String:
+	if tile_data.get_custom_data("apple"):
+		player.food += 1
+		set_cell(map_pos, 0, Vector2(1,1))
+		Global.logPrint("Picked up an apple.")
+		return "apple"
+	elif tile_data.get_custom_data("mountain"):
+		set_cell(map_pos, 0, Vector2(6,3))
+		Global.logPrint("Found a cave entrance!")
+		return "mountain"
+	set_cell(map_pos, 0, Vector2(1,1))
+	return "none"
 
 
-func build_tile(pos):
-	set_cell(local_to_map(pos), 0, Vector2(0,4))
+
+
+func build_tile(pos, type):
+	set_cell(local_to_map(pos), 0, type)

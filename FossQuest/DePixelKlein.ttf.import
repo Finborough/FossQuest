@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bdljcjudakul4"
-path="res://.godot/imported/Pixeled.ttf-8b501a73503a6291b7e228c5db1dd496.fontdata"
+uid="uid://dlro6bs3nhyup"
+path="res://.godot/imported/DePixelKlein.ttf-01811be26b6945deaa03da776fbc8808.fontdata"
 
 [deps]
 
-source_file="res://Pixeled.ttf"
-dest_files=["res://.godot/imported/Pixeled.ttf-8b501a73503a6291b7e228c5db1dd496.fontdata"]
+source_file="res://DePixelKlein.ttf"
+dest_files=["res://.godot/imported/DePixelKlein.ttf-01811be26b6945deaa03da776fbc8808.fontdata"]
 
 [params]
 

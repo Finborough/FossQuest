@@ -131,7 +131,6 @@ animation = &"walk_up"
 [node name="Navigation" type="Node2D" parent="." unique_id=616538431]
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Navigation" unique_id=903618232]
-path_desired_distance = 167.19
 avoidance_enabled = true
 
 [node name="NavTimer" type="Timer" parent="Navigation" unique_id=777640744]
