@@ -53,7 +53,9 @@ func _physics_process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
-		tilemap.build_tile(position + atk_direction * 8, Vector2(0,4))
+		var atk_pos = position + atk_direction * 8
+		tilemap.build_tile(atk_pos, Vector2(0,4), "wood")
+
 
 func movement(delta):
 	var direction : Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -90,6 +92,23 @@ func apply_knockback(dir: Vector2, force: float, knockback_duration: float) -> v
 	knockback = dir * force
 	knockback_timer = knockback_duration
 
+func add_to_inv(item : String):
+	if item in inventory:
+		inventory[item] += 1
+	else:
+		inventory[item] = 1
+
+func remove_from_inv(item : String, amount : int) -> bool:
+	if item in inventory:
+		if amount <= inventory[item]:
+			inventory[item] -= 1
+			return true
+		print("Not enough of this item.")
+		return false
+	else:
+		print("No such item.")
+		return false
+
 func _on_atk_timer_timeout() -> void:
 	can_atk = true
 
@@ -98,8 +117,8 @@ func _on_hurt_box_body_entered(body: Node2D) -> void:
 	
 	if not body.is_in_group("enemy"):
 		return
+	body.attack()
 	body.atk_timer.start()
-	
 
 
 func _on_hurt_box_body_exited(body: Node2D) -> void:

@@ -3,7 +3,7 @@ extends CanvasLayer
 @onready var player = get_tree().current_scene.get_node("Player")
 
 func _process(delta: float) -> void:
-	$VBoxContainer/Label.text = "Hearts: " + str(player.hp)
+	$VBoxContainer/Label.text = dic_to_string(player.inventory)
 	$PanelContainer/Label.text = "Ruby: " + str(player.rubies)
 	$PanelContainer/Label2.text = "Gold: " + str(player.gold)
 	$Logs.text = array_to_string(Global.logs)
@@ -13,6 +13,12 @@ func array_to_string(arr: Array) -> String:
 	for i in arr:
 		s += String(i) + "\n"
 	return s
+
+func dic_to_string(inventory: Dictionary) -> String:
+	var string = ""
+	for item in inventory:
+		string += String(item) + ": " + str(inventory[item]) + "\n"
+	return string
 
 var toggle = 0
 

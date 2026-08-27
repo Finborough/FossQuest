@@ -78,10 +78,12 @@ func die():
 	Global.logPrint("Looted " + str(loot) + " gold.")
 	queue_free()
 
-
-func _on_atk_timer_timeout() -> void:
+func attack():
 	var knockback_direction = (player.global_position - global_position).normalized()
 	player.apply_knockback(knockback_direction, 50.0, 0.2)
 	player.hp -= 1
 	player.animated_sprite.play("damage")
 	player.get_node("StunTimer").start()
+
+func _on_atk_timer_timeout() -> void:
+	attack()

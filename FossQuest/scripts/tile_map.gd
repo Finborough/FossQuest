@@ -123,7 +123,6 @@ func generate_chunk(pos: Vector2i):
 				)
 				set_cell(cell_pos, 0, atlas_pos)
 				var tile_data = get_cell_tile_data(cell_pos)
-				var spawned : bool = false
 				
 				if tile_data != null and tile_data.get_custom_data("snake_green") == true and randi_range(1,100) == 1:
 					var snake_instance = snake.instantiate()
@@ -192,17 +191,36 @@ func destroy_tile(pos, treasure : bool):
 	set_cell(pos, 0, Vector2(0,8))
 	await get_tree().create_timer(0.2).timeout
 	
+	if tile_data.get_custom_data("tree"):
+		player.add_to_inv("wood")
+		Global.logPrint("Picked up wood.")
+	if tile_data.get_custom_data("rock"):
+		player.add_to_inv("rock")
+		Global.logPrint("Picked up rocks.")
+		
+	
 	if treasure:
 		check_treasure(tile_data, pos)
 		return
 	set_cell(pos, 0, Vector2(1,1))
 
 func check_treasure(tile_data : TileData, map_pos : Vector2) -> String:
+	
 	if tile_data.get_custom_data("apple"):
-		player.food += 1
+		player.add_to_inv("apple")
 		set_cell(map_pos, 0, Vector2(1,1))
 		Global.logPrint("Picked up an apple.")
 		return "apple"
+	elif tile_data.get_custom_data("pear"):
+		player.add_to_inv("pear")
+		set_cell(map_pos, 0, Vector2(1,1))
+		Global.logPrint("Picked up a pear.")
+		return "pear"
+	elif tile_data.get_custom_data("coconut"):
+		player.add_to_inv("coconut")
+		set_cell(map_pos, 0, Vector2(0,3))
+		Global.logPrint("Picked up a coconut.")
+		return "coconut"
 	elif tile_data.get_custom_data("mountain"):
 		set_cell(map_pos, 0, Vector2(6,3))
 		Global.logPrint("Found a cave entrance!")
@@ -213,5 +231,13 @@ func check_treasure(tile_data : TileData, map_pos : Vector2) -> String:
 
 
 
-func build_tile(pos, type):
-	set_cell(local_to_map(pos), 0, type)
+func build_tile(pos, atlas_pos, type):
+	var tile_data: TileData = get_cell_tile_data(local_to_map(pos))
+	print(tile_data)
+	if tile_data.get_custom_data("water"):
+		if player.remove_from_inv(type, 1):
+			set_cell(local_to_map(pos), 0, atlas_pos)
+		else:
+			Global.logPrint("Not enough " + type + ".")
+	else:
+		Global.logPrint("Can't place bridge on land!")
