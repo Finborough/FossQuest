@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://ckavqb25bdaul"]
+[gd_scene format=3 uid="uid://luqq23huio5o"]
 
-[ext_resource type="Script" uid="uid://batu20a1ogly1" path="res://scripts/world.gd" id="1_dwbse"]
-[ext_resource type="Script" uid="uid://c7vvnva4ec5ix" path="res://scripts/tile_map.gd" id="1_f3sb7"]
-[ext_resource type="Texture2D" uid="uid://dyp2xrawc3brl" path="res://adventure.png" id="1_fj7yv"]
-[ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://player.tscn" id="3_tlwt5"]
-[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://hud.tscn" id="4_aqk2v"]
-[ext_resource type="AudioStream" uid="uid://dmvblbif2jl48" path="res://explosion.wav" id="5_036b0"]
+[ext_resource type="Script" uid="uid://batu20a1ogly1" path="res://scripts/world.gd" id="1_dnhvd"]
+[ext_resource type="Texture2D" uid="uid://dyp2xrawc3brl" path="res://adventure.png" id="2_78gyg"]
+[ext_resource type="Script" uid="uid://ddwfbhqarvt1e" path="res://scripts/cave_map.gd" id="3_dnhvd"]
+[ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://player.tscn" id="4_wkdm5"]
+[ext_resource type="AudioStream" uid="uid://dmvblbif2jl48" path="res://explosion.wav" id="5_c2qy3"]
+[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://hud.tscn" id="6_3ayon"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_tlwt5"]
 vertices = PackedVector2Array(4, 4, -4, 4, -4, -4, 4, -4)
@@ -40,7 +40,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-4, -4, 4, -4, 4, 4, -4
 agent_radius = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tlwt5"]
-texture = ExtResource("1_fj7yv")
+texture = ExtResource("2_78gyg")
 texture_region_size = Vector2i(8, 8)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
@@ -173,8 +173,26 @@ texture_region_size = Vector2i(8, 8)
 2:4/0/custom_data_7 = Color(0.4, 0.22352941, 0.19215687, 1)
 6:3/0 = 0
 6:3/0/custom_data_7 = Color(0.4117647, 0.41568628, 0.41568628, 1)
+6:3/0/custom_data_13 = true
 3:5/0 = 0
 2:5/0 = 0
+6:1/0 = 0
+6:1/0/custom_data_7 = Color(0.13333334, 0.1254902, 0.20392157, 1)
+6:1/0/custom_data_13 = true
+6:1/0/custom_data_14 = true
+7:1/0 = 0
+7:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+7:1/0/custom_data_6 = 10
+7:1/0/custom_data_7 = Color(0.34901962, 0.3372549, 0.32156864, 1)
+6:2/0 = 0
+6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+6:2/0/custom_data_6 = 4
+6:2/0/custom_data_7 = Color(0.9843137, 0.9490196, 0.21176471, 1)
+7:2/0 = 0
+7:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+7:2/0/custom_data_6 = 6
+7:2/0/custom_data_7 = Color(0.6745098, 0.19607843, 0.19607843, 1)
+7:2/0/custom_data_14 = true
 
 [sub_resource type="TileSet" id="TileSet_aqk2v"]
 tile_size = Vector2i(8, 8)
@@ -209,26 +227,30 @@ custom_data_layer_11/name = "stone_dungeon"
 custom_data_layer_11/type = 1
 custom_data_layer_12/name = "sand_dungeon"
 custom_data_layer_12/type = 1
+custom_data_layer_13/name = "gold_ore"
+custom_data_layer_13/type = 1
+custom_data_layer_14/name = "ruby_ore"
+custom_data_layer_14/type = 1
 sources/0 = SubResource("TileSetAtlasSource_tlwt5")
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_tlwt5"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xifcx"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_aqk2v"]
-noise = SubResource("FastNoiseLite_tlwt5")
+noise = SubResource("FastNoiseLite_xifcx")
 seamless = true
 
 [node name="World" type="Node2D" unique_id=1516028533]
 texture_filter = 1
-script = ExtResource("1_dwbse")
+script = ExtResource("1_dnhvd")
 
 [node name="GroundTiles" type="TileMapLayer" parent="." unique_id=1148119574]
 tile_set = SubResource("TileSet_aqk2v")
 occlusion_enabled = false
 rendering_quadrant_size = 120000
 physics_quadrant_size = 1
-script = ExtResource("1_f3sb7")
+script = ExtResource("3_dnhvd")
 
-[node name="Player" parent="." unique_id=1836106630 instance=ExtResource("3_tlwt5")]
+[node name="Player" parent="." unique_id=1836106630 instance=ExtResource("4_wkdm5")]
 
 [node name="Timer" type="Timer" parent="." unique_id=574881800]
 wait_time = 2.0
@@ -242,10 +264,10 @@ texture = SubResource("NoiseTexture2D_aqk2v")
 stretch_mode = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=814516016]
-stream = ExtResource("5_036b0")
+stream = ExtResource("5_c2qy3")
 max_polyphony = 8
 
-[node name="HUD" parent="." unique_id=2007827647 instance=ExtResource("4_aqk2v")]
+[node name="HUD" parent="." unique_id=2007827647 instance=ExtResource("6_3ayon")]
 offset_left = 212.0
 offset_top = 590.0
 offset_right = 212.0

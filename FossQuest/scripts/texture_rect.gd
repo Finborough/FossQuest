@@ -19,6 +19,8 @@ func _process(delta: float) -> void:
 	player_icon.position = (player.global_position / 8.0) + Vector2(world_origin)
 
 
+
+
 func generate_minimap() -> void:
 	await _ready() 
 	var world_size = Vector2i(

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dyp2xrawc3brl"
-path="res://.godot/imported/adventure.png-7b6ea42bfa1fc439fa0b9f942ee65b44.ctex"
+uid="uid://sk40py6u257m"
+path="res://.godot/imported/ui_armour.png-c0837329d7c354b6f8680dcea0c35e4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://adventure.png"
-dest_files=["res://.godot/imported/adventure.png-7b6ea42bfa1fc439fa0b9f942ee65b44.ctex"]
+source_file="res://ui_armour.png"
+dest_files=["res://.godot/imported/ui_armour.png-c0837329d7c354b6f8680dcea0c35e4c.ctex"]
 
 [params]
 

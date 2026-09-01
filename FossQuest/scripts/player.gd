@@ -6,6 +6,16 @@ var food = 0
 var gold = 0
 var rubies = 0
 
+var inventory : Dictionary = {
+	"sword": 1,
+	"": 0
+}
+var hotbar : Array = [
+	"sword",
+	""
+]
+var current_slot = 0
+
 # Movement
 @export var speed: float = 200.0
 var anim_direction: String = "down"
@@ -16,12 +26,10 @@ var can_atk : bool = true
 @onready var animated_sprite: AnimatedSprite2D = $CanvasGroup/AnimatedSprite2D
 @onready var atk_timer: Timer = $AtkTimer
 @onready var world = get_parent()
+@onready var hud = get_parent().get_node("HUD/CanvasLayer")
 @onready var tilemap = get_parent().get_node("GroundTiles")
 @onready var projectile = preload("res://projectile.tscn")
 
-var inventory : Dictionary = {
-	
-}
 
 var found_spawn_tile : bool = false
 
@@ -41,6 +49,7 @@ func _process(delta: float) -> void:
 		get_tree().reload_current_scene()
 
 func _physics_process(delta: float) -> void:
+	clamp_to_camera()
 	if knockback_timer > 0.0:
 		velocity = knockback
 		knockback_timer -= delta
@@ -52,9 +61,29 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("ui_cancel"):
+	if Input.is_action_just_pressed("ui_accept") and hotbar[current_slot] == "wood":
 		var atk_pos = position + atk_direction * 8
 		tilemap.build_tile(atk_pos, Vector2(0,4), "wood")
+		hud.update_inv("wood")
+
+func clamp_to_camera() -> void:
+	# 1. Get the current camera node in the scene
+	var camera = get_viewport().get_camera_2d()
+	if not camera:
+		return # Exit safely if no camera is active
+		
+	# 2. Get the center position and the total size of the screen
+	var cam_center = camera.get_screen_center_position()
+	var view_size = get_viewport_rect().size / camera.zoom # Adjusts automatically if you use camera zoom
+	
+	# 3. Calculate the edges (Top-Left and Bottom-Right corners)
+	var min_bound = cam_center - (view_size / 2.0)
+	var max_bound = cam_center + (view_size / 2.0)
+	
+	# 4. Restrict player position within those bounds (including player margin)
+	global_position.x = clamp(global_position.x, min_bound.x + 0, max_bound.x - 0)
+	global_position.y = clamp(global_position.y, min_bound.y + 0, max_bound.y - 0)
+
 
 
 func movement(delta):
@@ -65,7 +94,7 @@ func movement(delta):
 		update_animation_direction(direction)
 		animated_sprite.play("walk_" + anim_direction)
 		atk_direction = direction
-	elif Input.is_action_just_pressed("ui_accept") and can_atk:
+	elif Input.is_action_just_pressed("ui_accept") and can_atk and hotbar[current_slot] == "sword":
 		atk_timer.start()
 		can_atk = false
 		
@@ -95,8 +124,11 @@ func apply_knockback(dir: Vector2, force: float, knockback_duration: float) -> v
 func add_to_inv(item : String):
 	if item in inventory:
 		inventory[item] += 1
+		hud.update_inv(item)
 	else:
 		inventory[item] = 1
+		hud.add_to_inv(item)
+
 
 func remove_from_inv(item : String, amount : int) -> bool:
 	if item in inventory:

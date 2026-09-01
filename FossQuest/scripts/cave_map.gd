@@ -18,7 +18,7 @@ var world_min := Vector2i(
 )
 
 # Modify how high the sea level is (how much water)
-var sea_level = 0
+var sea_level = -2
 
 var noise_type = FastNoiseLite
 
@@ -38,7 +38,6 @@ func _ready() -> void:
 
 	moisture.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	temperature.noise_type = FastNoiseLite.TYPE_PERLIN
-	altitude.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	
 	moisture.seed = randi()
 	temperature.seed = randi()
@@ -108,33 +107,35 @@ func generate_chunk(pos: Vector2i):
 			temp = clamp(abs(temp), 0, 3)
 			
 			# Generate ocean
-			if alt < sea_level: 
-				set_cell(cell_pos, 0, Vector2i(6, 0))
+			if alt < sea_level or alt > -1: 
+				set_cell(cell_pos, 0, Vector2i(7, 1))
 
 			# Generate mountains
-			elif alt > 5 and moist < 1:
-				set_cell(cell_pos, 0, Vector2i(5, 0))
+			else:
+				set_cell(cell_pos, 0, Vector2i(6, 1))
 
 			# Generate everything else
-			else:
-				var atlas_pos := Vector2i(
-					int(round(2 * abs(moist * 10) / 20)),
-					int(round(2 * (temp * 10) / 20))
-				)
-				set_cell(cell_pos, 0, atlas_pos)
+			#else:
+				#var atlas_pos := Vector2i(
+					#int(round(2 * abs(moist * 10) / 20)),
+					#int(round(2 * (temp * 10) / 20))
+				#)
+				#set_cell(cell_pos, 0, atlas_pos)
 				var tile_data = get_cell_tile_data(cell_pos)
 				
 				if tile_data != null and tile_data.get_custom_data("snake_green") and randi_range(1,100) == 1:
 					var snake_instance = snake.instantiate()
 					snake_instance.global_position = to_global(map_to_local(cell_pos))
 					get_tree().current_scene.add_child.call_deferred(snake_instance)
-				if tile_data != null and tile_data.get_custom_data("stone_dungeon") and randi_range(1,600) == 1:
-					set_cell(cell_pos, 0, Vector2(3,5))
+				if tile_data != null and tile_data.get_custom_data("gold_ore") and randi_range(1,100) == 1:
+					set_cell(cell_pos, 0, Vector2(6,2))
+				if tile_data != null and tile_data.get_custom_data("ruby_ore") and randi_range(1,200) == 1:
+					set_cell(cell_pos, 0, Vector2(7,2))
 			var tile_data = get_cell_tile_data(cell_pos)
 
 			if tile_data:
 				var color = tile_data.get_custom_data("minimap_color")
-				WorldData.set_tile_minimap_color(cell_pos, color)
+				#WorldData.set_tile_minimap_color(cell_pos, color)
 
 
 
