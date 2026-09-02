@@ -18,7 +18,7 @@ var world_min := Vector2i(
 )
 
 # Modify how high the sea level is (how much water)
-var sea_level = 0
+var sea_level = -1
 
 var noise_type = FastNoiseLite
 
@@ -32,6 +32,8 @@ var initialized = false
 
 @onready var player = get_tree().current_scene.get_node("Player")
 @onready var snake = preload("res://snake.tscn")
+@onready var deer = preload("res://deer.tscn")
+
 
 func _ready() -> void:
 	Global.logPrint("Destroy Count von Finborough!")
@@ -45,6 +47,8 @@ func _ready() -> void:
 	altitude.seed = randi()
 	
 	altitude.frequency = 0.008
+	temperature.frequency = 0.008
+	moisture.frequency = 0.01
 	
 	update_chunks(player.position)
 	print(world_min)
@@ -105,8 +109,9 @@ func generate_chunk(pos: Vector2i):
 			var alt = altitude.get_noise_2d(cell_pos.x, cell_pos.y) * 10
 			
 			moist = clamp(abs(moist), 0, 4)
-			temp = clamp(abs(temp), 0, 3)
-			
+			temp = clamp(abs(temp), 0, 1000)
+			if temp > 3:
+				temp = 3
 			# Generate ocean
 			if alt < sea_level: 
 				set_cell(cell_pos, 0, Vector2i(6, 0))
@@ -124,12 +129,19 @@ func generate_chunk(pos: Vector2i):
 				set_cell(cell_pos, 0, atlas_pos)
 				var tile_data = get_cell_tile_data(cell_pos)
 				
-				if tile_data != null and tile_data.get_custom_data("snake_green") and randi_range(1,100) == 1:
+				if tile_data != null and tile_data.get_custom_data("snake_green") and randi_range(1,300) == 1:
 					var snake_instance = snake.instantiate()
 					snake_instance.global_position = to_global(map_to_local(cell_pos))
 					get_tree().current_scene.add_child.call_deferred(snake_instance)
-				if tile_data != null and tile_data.get_custom_data("stone_dungeon") and randi_range(1,600) == 1:
+				if tile_data != null and tile_data.get_custom_data("deer") and randi_range(1,300) == 1:
+					var deer_instance = deer.instantiate()
+					deer_instance.global_position = to_global(map_to_local(cell_pos))
+					get_tree().current_scene.add_child.call_deferred(deer_instance)
+				if tile_data != null and tile_data.get_custom_data("stone_dungeon") and randi_range(1,1000) == 1:
 					set_cell(cell_pos, 0, Vector2(3,5))
+				if tile_data != null and tile_data.get_custom_data("village") and randi_range(1,75) == 1:
+					set_pattern(cell_pos, tile_set.get_pattern(0))
+				
 			var tile_data = get_cell_tile_data(cell_pos)
 
 			if tile_data:
@@ -141,7 +153,16 @@ func generate_chunk(pos: Vector2i):
 
 	loaded_chunks.append(pos)
 
-
+func get_cell_tile_data_from_atlas_coords(atlas_coords: Vector2i) -> TileData:
+	#tile_map_layer holds your TileMapLayer
+	var tile_set = get_tile_set()
+	
+	#assuming tile set source id is 0
+	var tile_set_source = tile_set.get_source(0)
+	
+	#assuming that tile set source is TileSetAtlasSource, not TileSetScenesCollectionSource
+	#and assuming that you need the original tile data (0), not the alternative
+	return tile_set_source.get_tile_data(atlas_coords, 0)
 
 
 

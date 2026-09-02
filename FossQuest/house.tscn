@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bab54g1p8ey2y"]
+
+[ext_resource type="Texture2D" uid="uid://dyp2xrawc3brl" path="res://adventure.png" id="1_hfkix"]
+[ext_resource type="Script" uid="uid://b7mbwx0737yol" path="res://scripts/house.gd" id="1_metfq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_metfq"]
+atlas = ExtResource("1_hfkix")
+region = Rect2(8, 32, 8, 8)
+
+[node name="House" type="Node2D" unique_id=2042908027]
+script = ExtResource("1_metfq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=789620529]
+texture = SubResource("AtlasTexture_metfq")

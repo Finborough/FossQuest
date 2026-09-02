@@ -23,6 +23,14 @@ region = Rect2(16, 56, 8, 8)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_640wx"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_61f8s"]
+atlas = ExtResource("4_640wx")
+region = Rect2(32, 40, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g10ll"]
+atlas = ExtResource("4_640wx")
+region = Rect2(40, 40, 8, 8)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_640wx"]
 atlas = ExtResource("4_640wx")
 region = Rect2(50, 42, 1, 1)
@@ -114,31 +122,42 @@ vertical_alignment = 2
 
 [node name="Hearts" type="TextureProgressBar" parent="CanvasLayer" unique_id=794383269]
 texture_filter = 1
-offset_left = 834.0
-offset_top = 32.0
-offset_right = 1018.0
-offset_bottom = 40.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -318.0
+offset_top = 29.0
+offset_right = -238.0
+offset_bottom = 37.0
+grow_horizontal = 0
 scale = Vector2(4, 4)
 max_value = 10.0
-value = 3.0
+value = 10.0
 texture_progress = ExtResource("3_61f8s")
 
 [node name="Armour" type="TextureProgressBar" parent="CanvasLayer" unique_id=694743011]
 texture_filter = 1
-offset_left = 834.0
-offset_top = 60.0
-offset_right = 1018.0
-offset_bottom = 68.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -318.0
+offset_top = 59.0
+offset_right = -238.0
+offset_bottom = 67.0
+grow_horizontal = 0
 scale = Vector2(4, 4)
 max_value = 10.0
-value = 3.0
 texture_progress = ExtResource("4_g10ll")
 
 [node name="HotBar" type="VBoxContainer" parent="CanvasLayer" unique_id=134253607]
-offset_left = 838.0
-offset_top = 95.0
-offset_right = 1101.0
-offset_bottom = 253.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -314.0
+offset_top = 100.0
+offset_right = -51.0
+offset_bottom = 258.0
+grow_horizontal = 0
 
 [node name="Slot1" type="HBoxContainer" parent="CanvasLayer/HotBar" unique_id=75116588]
 layout_mode = 2
@@ -217,29 +236,57 @@ theme_override_font_sizes/font_size = 24
 text = "(M)ap"
 horizontal_alignment = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1663909656]
+[node name="PanelContainer" type="Control" parent="CanvasLayer" unique_id=1571112250]
 self_modulate = Color(0, 0, 0, 0)
-anchors_preset = 11
+layout_mode = 3
+anchors_preset = 3
 anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -313.0
-offset_top = 311.0
-offset_right = -8.0
-offset_bottom = -311.0
+offset_left = -312.0
+offset_top = -343.0
+offset_right = -10.0
+offset_bottom = -343.0
 grow_horizontal = 0
-grow_vertical = 2
+grow_vertical = 0
 
 [node name="Label" type="Label" parent="CanvasLayer/PanelContainer" unique_id=1539468245]
-layout_mode = 2
+layout_mode = 0
+offset_left = 24.0
+offset_right = 258.0
+offset_bottom = 26.0
 theme_override_font_sizes/font_size = 24
 text = "Ruby: 00"
 
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/PanelContainer" unique_id=124259439]
+texture_filter = 1
+layout_mode = 0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 232.0
+offset_bottom = 24.0
+texture = SubResource("AtlasTexture_61f8s")
+stretch_mode = 4
+
 [node name="Label2" type="Label" parent="CanvasLayer/PanelContainer" unique_id=116015246]
-layout_mode = 2
+layout_mode = 0
+offset_left = 53.0
+offset_right = 287.0
+offset_bottom = 26.0
 theme_override_font_sizes/font_size = 24
 text = "Gold: 00"
 horizontal_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/PanelContainer" unique_id=1182303675]
+texture_filter = 1
+layout_mode = 0
+offset_left = 283.0
+offset_top = -3.0
+offset_right = 517.0
+offset_bottom = 23.0
+texture = SubResource("AtlasTexture_g10ll")
+stretch_mode = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1204908655]
 process_mode = 3
