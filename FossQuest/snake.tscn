@@ -15,7 +15,7 @@ shader_parameter/line_thickness = 4
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sn80k"]
 atlas = ExtResource("1_baghe")
-region = Rect2(0, 64, 8, 8)
+region = Rect2(0, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_olj5u"]
 atlas = ExtResource("1_baghe")
@@ -126,7 +126,7 @@ material = SubResource("ShaderMaterial_olj5u")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=342302445]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_sn80k")
-animation = &"walk_up"
+animation = &"damage"
 
 [node name="Navigation" type="Node2D" parent="." unique_id=616538431]
 

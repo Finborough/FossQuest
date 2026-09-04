@@ -13,9 +13,9 @@ shader = ExtResource("2_b2nfk")
 shader_parameter/line_colour = Color(0.07450981, 0.07058824, 0.11372549, 1)
 shader_parameter/line_thickness = 4
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_sn80k"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_opa0w"]
 atlas = ExtResource("3_b7f05")
-region = Rect2(0, 64, 8, 8)
+region = Rect2(0, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tqij8"]
 atlas = ExtResource("3_b7f05")
@@ -53,7 +53,7 @@ region = Rect2(80, 48, 8, 8)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_sn80k")
+"texture": SubResource("AtlasTexture_opa0w")
 }],
 "loop": true,
 "name": &"damage",
@@ -126,7 +126,7 @@ material = SubResource("ShaderMaterial_olj5u")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=342302445]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_sn80k")
-animation = &"walk_down"
+animation = &"walk_right"
 
 [node name="Navigation" type="Node2D" parent="." unique_id=616538431]
 

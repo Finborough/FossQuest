@@ -202,7 +202,7 @@ func destroy_tile(pos, treasure : bool):
 	else:
 		print(tile_data.get_custom_data("tree"))
 	world.get_node("AudioStreamPlayer").play()
-	set_cell(pos, 0, Vector2(0,8))
+	set_cell(pos, 0, Vector2(0,5))
 	await get_tree().create_timer(0.2).timeout
 	
 

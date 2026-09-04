@@ -46,7 +46,7 @@ region = Rect2(40, 48, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pylmc"]
 atlas = ExtResource("2_onrkg")
-region = Rect2(0, 64, 8, 8)
+region = Rect2(0, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
 atlas = ExtResource("2_onrkg")
@@ -211,7 +211,7 @@ material = SubResource("ShaderMaterial_hqtel")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=678019596]
 sprite_frames = SubResource("SpriteFrames_sweqy")
-animation = &"attack_down"
+animation = &"walk_right"
 
 [node name="AtkTimer" type="Timer" parent="." unique_id=968529831]
 wait_time = 0.2

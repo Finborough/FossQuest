@@ -3,10 +3,30 @@ extends CanvasLayer
 @onready var player = get_tree().current_scene.get_node("Player")
 @onready var inventory_node = $InventoryContainer/ScrollContainer/Inventory
 
+var item_atlas_pos : Dictionary = {
+	"sword": Vector2(0,48),
+	"gold_sword": Vector2(8,48),
+	"crossbow": Vector2(16,48),
+	"armour": Vector2(24,48),
+	"rock": Vector2(0,56),
+	"wood": Vector2(0,64),
+	"bomb": Vector2(8,56),
+	"apple": Vector2(16,56),
+	"pear": Vector2(24,56),
+	"meat": Vector2(8,64),
+	"fish": Vector2(16,64),
+	"coconut": Vector2(24,64),
+}
+
 func _ready() -> void:
 	$PauseText.hide()
+	player.add_to_inv("sword")
+	player.add_to_inv("apple")
 
 func _process(delta: float) -> void:
+	$HotBar/Slot1/TextureRect.texture.region = Rect2(item_atlas_pos[player.hotbar[0]], Vector2(8.0,8.0))
+	$HotBar/Slot2/TextureRect2.texture.region = Rect2(item_atlas_pos[player.hotbar[1]], Vector2(8.0,8.0))
+	
 	if get_tree().paused:
 		$PauseText.show()
 	else:

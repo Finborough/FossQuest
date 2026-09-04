@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cyah1urdvyrrt" path="res://scripts/projectile.gd" id="1_dgwo2"]
 [ext_resource type="Shader" uid="uid://bp50n52e6jlcy" path="res://stroke.gdshader" id="1_qxf0c"]
-[ext_resource type="Texture2D" uid="uid://b00ulq3d4mh0p" path="res://adventure.png" id="2_dgwo2"]
+[ext_resource type="Texture2D" uid="uid://dyp2xrawc3brl" path="res://adventure.png" id="2_dgwo2"]
 [ext_resource type="AudioStream" uid="uid://7tu4ehyyqr6c" path="res://click.wav" id="4_sxmqc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sxmqc"]
@@ -13,16 +13,52 @@ shader = ExtResource("1_qxf0c")
 shader_parameter/line_colour = Color(0.07450981, 0.07058824, 0.11372549, 1)
 shader_parameter/line_thickness = 4
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xblw"]
+atlas = ExtResource("2_dgwo2")
+region = Rect2(16, 40, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dac07"]
+atlas = ExtResource("2_dgwo2")
+region = Rect2(8, 56, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0c7x6"]
+atlas = ExtResource("2_dgwo2")
+region = Rect2(8, 48, 8, 8)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_dgwo2"]
 atlas = ExtResource("2_dgwo2")
 region = Rect2(0, 48, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sxmqc"]
 atlas = ExtResource("2_dgwo2")
-region = Rect2(8, 64, 8, 8)
+region = Rect2(8, 40, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2xblw"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xblw")
+}],
+"loop": true,
+"name": &"arrow",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dac07")
+}],
+"loop": true,
+"name": &"bomb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0c7x6")
+}],
+"loop": true,
+"name": &"gold_sword",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dgwo2")
@@ -31,7 +67,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_sxmqc")
 }],
 "loop": false,
-"name": &"default",
+"name": &"sword",
 "speed": 0.0
 }]
 
@@ -53,6 +89,7 @@ material = SubResource("ShaderMaterial_2xblw")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="CanvasGroup" unique_id=1837213288]
 sprite_frames = SubResource("SpriteFrames_2xblw")
+animation = &"sword"
 
 [node name="Area2D" type="Area2D" parent="." unique_id=163623848]
 collision_layer = 5

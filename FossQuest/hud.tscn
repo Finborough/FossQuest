@@ -25,11 +25,11 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_61f8s"]
 atlas = ExtResource("4_640wx")
-region = Rect2(32, 40, 8, 8)
+region = Rect2(48, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g10ll"]
 atlas = ExtResource("4_640wx")
-region = Rect2(40, 40, 8, 8)
+region = Rect2(56, 40, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_640wx"]
 atlas = ExtResource("4_640wx")

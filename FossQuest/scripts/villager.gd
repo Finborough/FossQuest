@@ -7,7 +7,7 @@ extends CharacterBody2D
 
 var anim_direction: String = "down"
 
-var hp = 6
+var hp = 4
 
 @export var BASE_SPEED = 15
 var speed = BASE_SPEED
@@ -39,8 +39,7 @@ func _physics_process(delta: float) -> void:
 
 func movement(delta):
 	var direction = Vector2.ZERO
-	if is_on_wall():
-		animated_sprite.stop()
+
 	
 	if global_position.distance_to(player.global_position) < 64:
 

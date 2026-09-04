@@ -138,7 +138,7 @@ func generate_chunk(pos: Vector2i):
 					deer_instance.global_position = to_global(map_to_local(cell_pos))
 					get_tree().current_scene.add_child.call_deferred(deer_instance)
 				if tile_data != null and tile_data.get_custom_data("stone_dungeon") and randi_range(1,1000) == 1:
-					set_cell(cell_pos, 0, Vector2(3,5))
+					set_cell(cell_pos, 0, Vector2(5,5))
 				if tile_data != null and tile_data.get_custom_data("village") and randi_range(1,75) == 1:
 					set_pattern(cell_pos, tile_set.get_pattern(0))
 				
@@ -204,25 +204,23 @@ func clear_chunk(pos: Vector2i):
 
 func damage_tile(map_pos):
 	var original_tile = get_cell_atlas_coords(map_pos)
-	set_cell(map_pos, 0, Vector2(0,8))
+	set_cell(map_pos, 0, Vector2(0,5))
 	await get_tree().create_timer(0.2).timeout
 	set_cell(map_pos, 0, original_tile)
 
 func destroy_tile(pos, treasure : bool):
-	print("DESTROYED!!!")
 	var tile_data: TileData = get_cell_tile_data(pos)
-	print(tile_data)
-	if tile_data.get_custom_data("tree"):
+
+	if tile_data.get_custom_data("tree") == true:
 		
 		player.add_to_inv("wood")
 		Global.logPrint("Picked up wood.")
-	elif tile_data.get_custom_data("rock"):
+	if tile_data.get_custom_data("rock") == true and tile_data.get_custom_data("tree") == false:
 		player.add_to_inv("rock")
 		Global.logPrint("Picked up rocks.")
-	else:
-		print(tile_data.get_custom_data("tree"))
+		print(tile_data.get_custom_data("rock"))
 	world.get_node("AudioStreamPlayer").play()
-	set_cell(pos, 0, Vector2(0,8))
+	set_cell(pos, 0, Vector2(0,5))
 	await get_tree().create_timer(0.2).timeout
 	
 
@@ -264,10 +262,20 @@ func check_treasure(tile_data : TileData, map_pos : Vector2) -> String:
 func build_tile(pos, atlas_pos, type):
 	var tile_data: TileData = get_cell_tile_data(local_to_map(pos))
 	print(tile_data)
+	
 	if tile_data.get_custom_data("water"):
-		if player.remove_from_inv(type, 1):
-			set_cell(local_to_map(pos), 0, atlas_pos)
-		else:
-			Global.logPrint("Not enough " + type + ".")
+		if type == "wood":
+			if player.remove_from_inv(type, 1):
+				set_cell(local_to_map(pos), 0, atlas_pos)
+			else:
+				Global.logPrint("Not enough " + type + ".")
+		elif type == "rock":
+			Global.logPrint("Can't place wall on water!")
 	else:
-		Global.logPrint("Can't place bridge on land!")
+		if type == "rock":
+			if player.remove_from_inv(type, 1):
+				set_cell(local_to_map(pos), 0, atlas_pos)
+			else:
+				Global.logPrint("Not enough " + type + ".")
+		else:
+			Global.logPrint("Can't place bridge on land!")

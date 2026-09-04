@@ -1,18 +1,19 @@
 extends CharacterBody2D
 
 # Stats and Inventory
+var max_hp = 3
 var hp = 3
 var food = 0
 var gold = 0
 var rubies = 0
 
 var inventory : Dictionary = {
-	"sword": 1,
-	"": 0
+	"2": 1,
+	"3": 0
 }
 var hotbar : Array = [
 	"sword",
-	""
+	"apple"
 ]
 var current_slot = 0
 
@@ -35,6 +36,8 @@ var found_spawn_tile : bool = false
 
 var knockback : Vector2 = Vector2.ZERO
 var knockback_timer : float = 0.0
+
+
 
 func check_if_stuck() -> bool:
 	if test_move(global_transform, Vector2.ZERO):
@@ -61,10 +64,28 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("ui_accept") and hotbar[current_slot] == "wood":
+	if Input.is_action_just_pressed("ui_accept"):
 		var atk_pos = position + atk_direction * 8
-		tilemap.build_tile(atk_pos, Vector2(0,4), "wood")
-		hud.update_inv("wood")
+		if hotbar[current_slot] == "wood":
+			tilemap.build_tile(atk_pos, Vector2(0,4), "wood")
+			hud.update_inv("wood")
+		if hotbar[current_slot] == "rock":
+			tilemap.build_tile(atk_pos, Vector2(0,7), "rock")
+			hud.update_inv("rock")
+		
+		if inventory[hotbar[current_slot]] > 0 and hp < max_hp:
+			
+			if hotbar[current_slot] == "apple" or hotbar[current_slot] == "pear" or hotbar[current_slot] == "coconut":
+					hp += 1
+					Global.logPrint("Healed 1 heart.")
+					remove_from_inv(hotbar[current_slot], 1)
+					hud.update_inv(hotbar[current_slot])
+
+			if hotbar[current_slot] == "meat" or hotbar[current_slot] == "fish":
+					hp += 2
+					Global.logPrint("Healed 2 hearts.")
+					remove_from_inv(hotbar[current_slot], 1)
+					hud.update_inv(hotbar[current_slot])
 
 func clamp_to_camera() -> void:
 	# 1. Get the current camera node in the scene
